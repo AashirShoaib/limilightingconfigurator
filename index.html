@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Sliders with Full-Screen iframe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: #ccc;
+        }
+
+        .iframe-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .controls-panel {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            padding: 25px;
+            background-color: rgba(30, 30, 30, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        h1 {
+            color: #e0e0e0;
+            text-align: center;
+            margin-top: 0;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        /* --- Slider and Input Styling --- */
+        .slider-group {
+            margin-bottom: 25px;
+        }
+
+        .slider-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #bbb;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slider {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            height: 5px;
+            background: #444;
+            outline: none;
+            opacity: 0.8;
+            transition: opacity .2s;
+            border-radius: 5px;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #6cff6c;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(108, 255, 108, 0.5);
+            transition: background 0.2s ease-in-out;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #6cff6c;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(108, 255, 108, 0.5);
+            transition: background 0.2s ease-in-out;
+        }
+        
+        .slider-value {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #555;
+            background-color: #2a2a2a;
+            color: #6cff6c;
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease;
+        }
+        
+        .slider-value:focus {
+            outline: none;
+            border-color: #6cff6c;
+        }
+
+        /* --- New button styles --- */
+        .color-button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .color-button {
+            flex-grow: 1;
+            padding: 10px 15px;
+            background-color: #333;
+            border: 2px solid #555;
+            border-radius: 8px;
+            color: #ccc;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .color-button:hover {
+            background-color: #444;
+            color: #fff;
+        }
+
+        .color-button.active {
+            background-color: #6cff6c;
+            border-color: #6cff6c;
+            color: #1a1a1a;
+            box-shadow: 0 0 10px rgba(108, 255, 108, 0.7);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="iframe-container">
+        <iframe id="app" src="https://playcanv.as/e/p/HjBtdnfW/" allowfullscreen></iframe>
+    </div>
+
+    <div class="controls-panel">
+        <h1>Light Controls</h1>
+        
+        <div class="slider-group">
+            <label for="intensity-slider">Intensity</label>
+            <div class="slider-container">
+                <input type="range" min="1" max="32" value="3" class="slider" id="intensity-slider">
+                <input type="number" min="1" max="32" value="3" class="slider-value" id="intensity-value">
+            </div>
+        </div>
+
+        <div class="color-button-group">
+            <button id="warm-button" class="color-button active">Warm</button>
+            <button id="cool-button" class="color-button">Cool</button>
+        </div>
+    </div>
+
+<script>
+    // This is the new function that sets up the sync and messaging for the intensity slider
+    function setupIntensitySlider(sliderId, numberId, postMessageCallback) {
+        const slider = document.getElementById(sliderId);
+        const numberInput = document.getElementById(numberId);
+
+        slider.addEventListener('input', () => {
+            const val = slider.value;
+            numberInput.value = val;
+            postMessageCallback(val);
+        });
+
+        numberInput.addEventListener('input', () => {
+            const val = parseInt(numberInput.value);
+            const min = parseInt(slider.min);
+            const max = parseInt(slider.max);
+
+            if (!isNaN(val) && val >= min && val <= max) {
+                slider.value = val;
+                postMessageCallback(val);
+            }
+        });
+    }
+
+    // Now, call the function for the intensity slider
+    const appIframe = document.getElementById('app');
+    setupIntensitySlider('intensity-slider', 'intensity-value', (val) => {
+        appIframe.contentWindow.postMessage({ type: 'IntensityUpdate', intensity: val }, '*');
+        console.log('Intensity:', val);
+    });
+
+    // Get the buttons for warm and cool colors
+    const warmButton = document.getElementById('warm-button');
+    const coolButton = document.getElementById('cool-button');
+
+    // Add event listeners to handle button clicks and active state
+    warmButton.addEventListener('click', () => {
+        appIframe.contentWindow.postMessage({ type: 'SetWarm' }, '*');
+        warmButton.classList.add('active');
+        coolButton.classList.remove('active');
+    });
+
+    coolButton.addEventListener('click', () => {
+        appIframe.contentWindow.postMessage({ type: 'SetCool' }, '*');
+        coolButton.classList.add('active');
+        warmButton.classList.remove('active');
+    });
+</script>
+</body>
+</html>
