@@ -65,3 +65,54 @@ interiorButton.addEventListener('click', () => {
     interiorButton.classList.add('active');
     vacantButton.classList.remove('active');
 });
+
+
+// Dropdown toggle logic
+document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+        const content = toggle.nextElementSibling;
+        const isOpen = content.classList.contains('open');
+
+        // Close all others
+        document.querySelectorAll('.dropdown-content').forEach(c => c.classList.remove('open'));
+        document.querySelectorAll('.dropdown-toggle').forEach(t => t.classList.remove('active'));
+
+        // Toggle this one
+        if (!isOpen) {
+            content.classList.add('open');
+            toggle.classList.add('active');
+        }
+    });
+});
+
+
+// Light selection buttons
+const light1 = document.getElementById('Light1-button');
+const light2 = document.getElementById('Light2-button');
+const light3 = document.getElementById('Light3-button');
+
+// Utility to set active state
+function setActiveLight(button) {
+    [light1, light2, light3].forEach(b => b.classList.remove('active'));
+    button.classList.add('active');
+}
+
+// Event listeners
+light1.addEventListener('click', () => {
+    appIframe.contentWindow.postMessage({ type: 'SetLight', light: 'Light1' }, '*');
+    // console.log(light);
+    setActiveLight(light1);
+});
+
+light2.addEventListener('click', () => {
+    appIframe.contentWindow.postMessage({ type: 'SetLight', light: 'Light2' }, '*');
+    // console.log(light);
+    setActiveLight(light2);
+});
+
+light3.addEventListener('click', () => {
+    appIframe.contentWindow.postMessage({ type: 'SetLight', light: 'Light3' }, '*');
+    // console.log(light);
+    setActiveLight(light3);
+});
+
