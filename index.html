@@ -14,23 +14,53 @@
         <iframe id="app" src="https://playcanv.as/e/p/HjBtdnfW/" allowfullscreen></iframe>
     </div>
 
-    <div class="controls-panel">
-        <h1>Light Controls</h1>
-        
-        <div class="slider-group">
-            <label for="intensity-slider">Intensity</label>
-            <div class="slider-container">
-                <input type="range" min="1" max="7" value="5" class="slider" id="intensity-slider">
-                <input type="number" min="1" max="7" value="5" class="slider-value" id="intensity-value">
+<div class="controls-panel">
+    <h1>Configurations</h1>
+
+    <!-- Light Selection Section -->
+    <div class="dropdown">
+        <button class="dropdown-toggle">Light Selection</button>
+        <div class="dropdown-content">
+            <div class="color-button-group">
+                <button id="Light1-button" class="color-button active">Light1</button>
+                <button id="Light2-button" class="color-button">Light2</button>
+                <button id="Light3-button" class="color-button">Light3</button>
             </div>
         </div>
+    </div>
 
-        <div class="color-button-group">
-            <button id="warm-button" class="color-button active">Warm</button>
-            <button id="cool-button" class="color-button">Cool</button>
+    <!-- Environment Section -->
+    <div class="dropdown">
+        <button class="dropdown-toggle">Environment</button>
+        <div class="dropdown-content">
+            <div class="color-button-group">
+                <button id="vacant-button" class="color-button">Vacant</button>
+                <button id="interior-button" class="color-button active">Interior</button>
+            </div>
         </div>
     </div>
-<!-- Environment Controls Panel -->
+
+    <!-- Light Controls Section -->
+    <div class="dropdown">
+        <button class="dropdown-toggle">Light Controls</button>
+        <div class="dropdown-content">
+            <div class="slider-group">
+                <label for="intensity-slider">Intensity</label>
+                <div class="slider-container">
+                    <input type="range" min="1" max="20" value="5" class="slider" id="intensity-slider">
+                    <input type="number" min="1" max="20" value="5" class="slider-value" id="intensity-value">
+                </div>
+            </div>
+
+            <div class="color-button-group">
+                <button id="warm-button" class="color-button active">Warm</button>
+                <button id="cool-button" class="color-button">Cool</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Environment Controls Panel
 <div class="controls-panel env-panel">
     <h1>Environment</h1>
 
@@ -38,7 +68,7 @@
         <button id="vacant-button" class="color-button active">Vacant</button>
         <button id="interior-button" class="color-button">Interior</button>
     </div>
-</div>
+</div> -->
 
 
 
